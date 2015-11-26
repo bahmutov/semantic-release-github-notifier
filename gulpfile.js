@@ -5,22 +5,22 @@ var gulp = require('gulp');
 var paths = {
   lintFiles: [
     'gulpfile.js',
-    'server/**/*.js',
+    'src/**/*.js',
   ],
 
   documentationFiles: [
     'README.md',
-    'server/**/*.js',
-    '!server/**/*.spec.js',
+    'src/**/*.js',
+    '!src/**/*.spec.js',
   ],
 
   sourceFiles: [
-    'server/**/*.js',
-    '!server/**/*.spec.js',
+    'src/**/*.js',
+    '!src/**/*.spec.js',
   ],
 
   testFiles: [
-    'server/**/*.spec.js',
+    'src/**/*.spec.js',
   ],
 };
 
@@ -44,7 +44,7 @@ gulp.task('test', ['clean'], function(done) {
   var istanbul = require('gulp-istanbul');
   var mocha    = require('gulp-mocha');
 
-  gulp.src(paths.sourceFiles.concat(['!server/serve.js']))
+  gulp.src(paths.sourceFiles)
     .pipe(istanbul({ includeUntested: true }))
     .pipe(istanbul.hookRequire())
     .on('finish', function() {

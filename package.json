@@ -5,7 +5,7 @@
     "url": "https://github.com/hbetts"
   },
   "bin": {},
-  "bugs": "https://github.com/hbetts/semantic-release-notify-github/issues",
+  "bugs": "https://github.com/hbetts/semantic-release-github-notifier/issues",
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
@@ -25,13 +25,13 @@
   ],
   "license": "Apache-2.0",
   "main": "./src/index.js",
-  "name": "semantic-release-notify-github",
+  "name": "semantic-release-github-notifier",
   "release": {
     "verifyConditions": []
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hbetts/semantic-release-notify-github.git"
+    "url": "https://github.com/hbetts/semantic-release-github-notifier.git"
   },
   "scripts": {
     "docs": "gulp jsdoc",
