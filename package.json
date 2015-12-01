@@ -41,6 +41,9 @@
   },
   "version": "1.0.0",
   "dependencies": {
+    "git-head": "^1.7.0",
+    "github": "^0.2.4",
+    "parse-github-repo-url": "^1.0.0"
   },
   "devDependencies": {
     "chai": "^3.4.0",
