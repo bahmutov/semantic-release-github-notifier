@@ -60,6 +60,7 @@
     "jshint": "^2.8.0",
     "jshint-stylish": "^2.0.1",
     "nock": "^3.0.0",
-    "semantic-release": "^4.3.5"
+    "semantic-release": "^4.3.5",
+    "tmp": "0.0.28"
   }
 }
