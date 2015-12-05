@@ -1,6 +1,6 @@
 # semantic-release-github-notifier
 
-[![Build Status](https://snap-ci.com/hbetts/semantic-release-github-notifier/branch/master/build_image)](https://snap-ci.com/hbetts/semantic-release-github-notifier/branch/master)
+[![Build Status](https://travis-ci.org/hbetts/semantic-release-github-notifier.svg?branch=master)](https://travis-ci.org/hbetts/semantic-release-github-notifier)
 [![codecov.io](https://codecov.io/github/hbetts/semantic-release-github-notifier/coverage.svg?branch=master)](https://codecov.io/github/hbetts/semantic-release-github-notifier?branch=master)
 [![Dependency Status](https://david-dm.org/hbetts/semantic-release-github-notifier.svg)](https://david-dm.org/hbetts/semantic-release-github-notifier)
 [![devDependency Status](https://david-dm.org/hbetts/semantic-release-github-notifier/dev-status.svg)](https://david-dm.org/hbetts/semantic-release-github-notifier#info=devDependencies)
