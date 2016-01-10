@@ -17,7 +17,7 @@
     "npm": "^3.0.0 || ^2.1.9"
   },
   "files": [
-    "server/"
+    "src/"
   ],
   "keywords": [
     "semantic-release",
@@ -34,9 +34,8 @@
     "url": "https://github.com/hbetts/semantic-release-github-notifier.git"
   },
   "scripts": {
-    "docs": "gulp jsdoc",
-    "semantic-release": "semantic-release pre && npm publish --access=public && semantic-release post",
-    "start": "node ./server/serve.js",
+    "docs": "gulp docs",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "test": "gulp"
   },
   "version": "1.0.0",
@@ -53,15 +52,12 @@
     "gulp": "^3.4.0",
     "gulp-istanbul": "^0.10.0",
     "gulp-jscs": "^3.0.0",
-    "gulp-jsdoc": "^0.1.4",
+    "gulp-jsdoc3": "0.0.3",
     "gulp-jshint": "^2.0.0",
     "gulp-mocha": "^2.0.0",
     "gulp-watch": "^4.3.5",
-    "jsdoc": "^3.3.3",
     "jshint": "^2.8.0",
     "jshint-stylish": "^2.0.1",
-    "nock": "^3.0.0",
-    "semantic-release": "^4.3.5",
-    "tmp": "0.0.28"
+    "semantic-release": "^4.3.5"
   }
 }
