@@ -52,7 +52,7 @@
     "gulp": "^3.4.0",
     "gulp-istanbul": "^0.10.0",
     "gulp-jscs": "^3.0.0",
-    "gulp-jsdoc3": "0.0.3",
+    "gulp-jsdoc3": "^0.1.0",
     "gulp-jshint": "^2.0.0",
     "gulp-mocha": "^2.0.0",
     "gulp-watch": "^4.3.5",
