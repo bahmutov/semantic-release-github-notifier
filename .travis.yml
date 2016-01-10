@@ -9,10 +9,18 @@ cache:
   directories:
     - node_modules
 env:
-  - CXX=g++-4.8
+  global:
+    - CXX=g++-4.8
+  matrix:
+    - NPM_VERSION=2
+    - NPM_VERSION=3
+matrix:
+  fast_finish: true
 node_js:
   - "0.12"
   - "4.2"
+before_install:
+  - npm install --global npm@${NPM_VERSION}
 after_success:
   - curl -Lo travis_after_all.py https://git.io/travis_after_all
   - python travis_after_all.py
