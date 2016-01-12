@@ -1,8 +1,10 @@
 'use strict';
 
+var _ = require('lodash');
 var url = require('url');
 var GitHubApi = require('github');
 var parser = require('conventional-commits-parser');
+var streamify = require('stream-array');
 var through = require('through2');
 
 module.exports = githubNotifier;
@@ -24,13 +26,20 @@ function githubNotifier(pluginConfig, config, callback) {
     });
   }
 
-  parser()
-    .pipe(through.obj(function(commit, enc, cb) {
-      if (config.options.debug) {
-        return callback();
-      }
+  if (config.options.debug) {
+    return callback();
+  }
 
-      // post to github.
+  streamify(config.commits)
+    .pipe(through.obj(function(commit, enc, cb) {
+      cb(null, commit.message);
+    }))
+    .pipe(parser())
+    .pipe(through.obj(function(commit, enc, cb) {
+
+      _.forEach(commit.references, function(/*reference*/) {
+        // post to github using reference.issue
+      });
 
       cb();
     }))
