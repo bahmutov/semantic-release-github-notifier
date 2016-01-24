@@ -18,4 +18,12 @@ describe('semantic-release-github-notifier', function() {
     expect(callback).to.have.been.calledOnce
       .and.to.have.been.calledWithExactly();
   });
+
+  it('parses GitHub URL', function() {
+    var callback = sinon.spy();
+    plugin({}, { options: { debug: true, githubUrl: 'https://www.github.com:80' } }, callback);
+
+    expect(callback).to.have.been.calledOnce
+      .and.to.have.been.calledWithExactly();
+  });
 });
