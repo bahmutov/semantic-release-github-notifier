@@ -60,6 +60,8 @@
     "gulp-watch": "^4.3.5",
     "jshint": "^2.8.0",
     "jshint-stylish": "^2.0.1",
-    "semantic-release": "^4.3.5"
+    "semantic-release": "^4.3.5",
+    "sinon": "^1.17.2",
+    "sinon-chai": "^2.8.0"
   }
 }

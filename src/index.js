@@ -20,14 +20,14 @@ function githubNotifier(pluginConfig, config, callback) {
   });
 
   if (config.options.debug) {
+    return callback();
+  }
+
+  if (config.options.debug) {
     github.authenticate({
       type: 'oauth',
       token: config.options.githubToken,
     });
-  }
-
-  if (config.options.debug) {
-    return callback();
   }
 
   streamify(config.commits)

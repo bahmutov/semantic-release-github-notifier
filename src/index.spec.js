@@ -1,12 +1,21 @@
 'use strict';
 
-var plugin = require('./index');
+var chai = require('chai');
+var sinon = require('sinon');
+var sinonChai = require('sinon-chai');
 
-var expect = require('chai').expect;
+chai.use(sinonChai);
+var expect = chai.expect;
+
+var plugin = require('./index');
 
 describe('semantic-release-github-notifier', function() {
 
-  it('should be a function', function() {
-    expect(plugin).to.be.a('function');
+  it('does nothing while running in debug mode', function() {
+    var callback = sinon.spy();
+    plugin({}, { options: { debug: true } }, callback);
+
+    expect(callback).to.have.been.calledOnce
+      .and.to.have.been.calledWithExactly();
   });
 });
