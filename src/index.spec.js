@@ -1,29 +1,52 @@
 'use strict';
 
 var chai = require('chai');
+var proxyquire = require('proxyquire');
 var sinon = require('sinon');
 var sinonChai = require('sinon-chai');
 
 chai.use(sinonChai);
 var expect = chai.expect;
 
-var plugin = require('./index');
+function githubMock() {
+}
+
+githubMock.prototype.authenticate = sinon.spy();
 
 describe('semantic-release-github-notifier', function() {
+  var options;
+  var plugin;
 
-  it('does nothing while running in debug mode', function() {
-    var callback = sinon.spy();
-    plugin({}, { options: { debug: true } }, callback);
-
-    expect(callback).to.have.been.calledOnce
-      .and.to.have.been.calledWithExactly();
+  before(function() {
+    plugin = proxyquire('./index', { github: githubMock });
   });
 
-  it('parses GitHub URL', function() {
-    var callback = sinon.spy();
-    plugin({}, { options: { debug: true, githubUrl: 'https://www.github.com:80' } }, callback);
+  beforeEach(function() {
+    options = {
+      debug: true,
+      githubToken: 'TOKEN',
+      githubUrl: 'https://www.github.com:80',
+    };
 
-    expect(callback).to.have.been.calledOnce
-      .and.to.have.been.calledWithExactly();
+  });
+
+  describe('debug mode', function() {
+
+    it('parses GitHub URL', function() {
+      var callback = sinon.spy();
+      plugin({}, { options: options }, callback);
+
+      expect(callback).to.have.been.calledOnce
+        .and.to.have.been.calledWithExactly(null);
+    });
+
+    it('falls back on default GitHub URL', function() {
+      var callback = sinon.spy();
+      options.githubUrl = undefined;
+      plugin({}, { options: options }, callback);
+
+      expect(callback).to.have.been.calledOnce
+        .and.to.have.been.calledWithExactly(null);
+    });
   });
 });

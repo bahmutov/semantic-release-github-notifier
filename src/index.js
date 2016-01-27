@@ -3,15 +3,9 @@
 var url = require('url');
 var GitHubApi = require('github');
 
-var commitsParser = require('./commit-parser');
-
 module.exports = githubNotifier;
 
 function githubNotifier(pluginConfig, config, callback) {
-  if (config.options.debug) {
-    return callback();
-  }
-
   var githubConfig = config.options.githubUrl ? url.parse(config.options.githubUrl) : {};
 
   var github = new GitHubApi({
@@ -26,5 +20,11 @@ function githubNotifier(pluginConfig, config, callback) {
     token: config.options.githubToken,
   });
 
-  commitsParser(config.commits);
+  // Placed at the end so that all GitHub code has had a chance to be invoked, including sanity
+  // checking for required input, like a GitHub token.
+  if (config.options.debug) {
+    return callback(null);
+  }
+
+  return callback();
 }
