@@ -42,7 +42,7 @@
   "dependencies": {
     "conventional-commits-parser": "^0.1.2",
     "github": "^0.2.4",
-    "lodash": "^3.10.1",
+    "lodash": "^4.0.1",
     "stream-array": "^1.1.1",
     "through2": "^2.0.0"
   },
