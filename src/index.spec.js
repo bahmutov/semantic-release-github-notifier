@@ -28,6 +28,7 @@ describe('semantic-release-github-notifier', function() {
       githubUrl: 'https://www.github.com:80',
     };
 
+    githubMock.prototype.authenticate.reset();
   });
 
   describe('debug mode', function() {
@@ -35,6 +36,9 @@ describe('semantic-release-github-notifier', function() {
     it('parses GitHub URL', function() {
       var callback = sinon.spy();
       plugin({}, { options: options }, callback);
+
+      expect(githubMock.prototype.authenticate).to.have.been.calledOnce
+        .and.to.have.been.calledWithExactly({ type: 'oauth', token: options.githubToken });
 
       expect(callback).to.have.been.calledOnce
         .and.to.have.been.calledWithExactly(null);
@@ -45,8 +49,23 @@ describe('semantic-release-github-notifier', function() {
       options.githubUrl = undefined;
       plugin({}, { options: options }, callback);
 
+      expect(githubMock.prototype.authenticate).to.have.been.calledOnce
+        .and.to.have.been.calledWithExactly({ type: 'oauth', token: options.githubToken });
+
       expect(callback).to.have.been.calledOnce
         .and.to.have.been.calledWithExactly(null);
+    });
+  });
+
+  describe('normal mode', function() {
+
+    it('calls callback with true', function() {
+      var callback = sinon.spy();
+      options.debug = undefined;
+      plugin({}, { options: options }, callback);
+
+      expect(callback).to.have.been.calledOnce
+        .and.to.have.been.calledWithExactly(true);
     });
   });
 });

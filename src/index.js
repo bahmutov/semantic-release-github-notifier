@@ -26,5 +26,5 @@ function githubNotifier(pluginConfig, config, callback) {
     return callback(null);
   }
 
-  return callback();
+  return callback(true);
 }
