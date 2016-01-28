@@ -27,7 +27,7 @@ var paths = {
 /*
  * Clean up build directories.
  */
-gulp.task('clean', function() {
+gulp.task('clean', function () {
   var del = require('del');
 
   return del([
@@ -40,14 +40,14 @@ gulp.task('clean', function() {
  * Generator a Cobertura coverage report.
  * TODO
  */
-gulp.task('test', ['clean'], function(done) {
+gulp.task('test', ['clean'], function (done) {
   var istanbul = require('gulp-istanbul');
   var mocha    = require('gulp-mocha');
 
   gulp.src(paths.sourceFiles)
     .pipe(istanbul({ includeUntested: true }))
     .pipe(istanbul.hookRequire())
-    .on('finish', function() {
+    .on('finish', function () {
       gulp.src(paths.testFiles)
         .pipe(mocha({
           reporter: ['progress'],
@@ -62,7 +62,7 @@ gulp.task('test', ['clean'], function(done) {
 /*
  * Run source files through JSCS style checks.
  */
-gulp.task('jscs', function() {
+gulp.task('jscs', function () {
   var jscs = require('gulp-jscs');
 
   return gulp.src(paths.lintFiles)
@@ -76,7 +76,7 @@ gulp.task('jscs', function() {
  * Generate source documentation.
  * TODO
  */
-gulp.task('docs', ['clean'], function(done) {
+gulp.task('docs', ['clean'], function (done) {
   var jsdoc = require('gulp-jsdoc3');
 
   gulp.src(paths.documentationFiles, { read: false })
@@ -87,7 +87,7 @@ gulp.task('docs', ['clean'], function(done) {
 /*
  * Run source files through JSHint lint checks.
  */
-gulp.task('jshint', function() {
+gulp.task('jshint', function () {
   var jshint  = require('gulp-jshint');
 
   return gulp.src(paths.lintFiles)
@@ -102,15 +102,15 @@ gulp.task('jshint', function() {
  * changed file(s).
  * TODO
  */
-gulp.task('serve', ['default'], function() {
+gulp.task('serve', ['default'], function () {
   var watch = require('gulp-watch');
 
-  watch(paths.lintFiles, function() {
+  watch(paths.lintFiles, function () {
     gulp.start('jshint');
     gulp.start('jscs');
   });
 
-  watch(paths.templateFiles.concat(paths.sourceFiles).concat(paths.testFiles), function() {
+  watch(paths.templateFiles.concat(paths.sourceFiles).concat(paths.testFiles), function () {
     gulp.start('test:unit');
   });
 });

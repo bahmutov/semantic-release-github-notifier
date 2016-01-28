@@ -9,13 +9,13 @@ module.exports = commitParser;
 
 function commitParser(commits) {
   return streamify(commits)
-    .pipe(through.obj(function(commit, enc, cb) {
+    .pipe(through.obj(function (commit, enc, cb) {
       cb(null, commit.message);
     }))
     .pipe(parser())
-    .pipe(through.obj(function(commit, enc, cb) {
+    .pipe(through.obj(function (commit, enc, cb) {
 
-      _.forEach(commit.references, function(/*reference*/) {
+      _.forEach(commit.references, function (/*reference*/) {
         // post to github using reference.issue
       });
 

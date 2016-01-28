@@ -13,15 +13,15 @@ function githubMock() {
 
 githubMock.prototype.authenticate = sinon.spy();
 
-describe('semantic-release-github-notifier', function() {
+describe('semantic-release-github-notifier', function () {
   var options;
   var plugin;
 
-  before(function() {
+  before(function () {
     plugin = proxyquire('./index', { github: githubMock });
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     options = {
       debug: true,
       githubToken: 'TOKEN',
@@ -31,9 +31,9 @@ describe('semantic-release-github-notifier', function() {
     githubMock.prototype.authenticate.reset();
   });
 
-  describe('debug mode', function() {
+  describe('debug mode', function () {
 
-    it('parses GitHub URL', function() {
+    it('parses GitHub URL', function () {
       var callback = sinon.spy();
       plugin({}, { options: options }, callback);
 
@@ -44,7 +44,7 @@ describe('semantic-release-github-notifier', function() {
         .and.to.have.been.calledWithExactly(null);
     });
 
-    it('falls back on default GitHub URL', function() {
+    it('falls back on default GitHub URL', function () {
       var callback = sinon.spy();
       options.githubUrl = undefined;
       plugin({}, { options: options }, callback);
@@ -57,9 +57,9 @@ describe('semantic-release-github-notifier', function() {
     });
   });
 
-  describe('normal mode', function() {
+  describe('normal mode', function () {
 
-    it('calls callback with true', function() {
+    it('calls callback with true', function () {
       var callback = sinon.spy();
       options.debug = undefined;
       plugin({}, { options: options }, callback);
