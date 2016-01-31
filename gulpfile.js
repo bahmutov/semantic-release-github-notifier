@@ -105,13 +105,17 @@ gulp.task('jshint', function () {
 gulp.task('serve', ['default'], function () {
   var watch = require('gulp-watch');
 
+  watch(paths.documentationFiles, function () {
+    gulp.start('docs');
+  });
+
   watch(paths.lintFiles, function () {
     gulp.start('jshint');
     gulp.start('jscs');
   });
 
-  watch(paths.templateFiles.concat(paths.sourceFiles).concat(paths.testFiles), function () {
-    gulp.start('test:unit');
+  watch(paths.sourceFiles.concat(paths.testFiles), function () {
+    gulp.start('test');
   });
 });
 

@@ -19,16 +19,15 @@
   "files": [
     "src/"
   ],
+  "homepage": "https://github.com/hbetts/winston-gulplog#readme",
   "keywords": [
     "semantic-release",
-    "github"
+    "github",
+    "notice"
   ],
   "license": "Apache-2.0",
-  "main": "./src/index.js",
+  "main": "src/index.js",
   "name": "semantic-release-github-notifier",
-  "release": {
-    "verifyConditions": []
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/hbetts/semantic-release-github-notifier.git"
