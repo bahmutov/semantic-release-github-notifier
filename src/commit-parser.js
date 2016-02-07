@@ -1,6 +1,5 @@
 'use strict';
 
-var _ = require('lodash');
 var parser = require('conventional-commits-parser');
 var streamify = require('stream-array');
 var through = require('through2');
@@ -13,17 +12,5 @@ function commitParser(commits) {
       cb(null, commit.message);
     }))
     .pipe(parser())
-    .pipe(through.obj(function (commit, enc, cb) {
-
-      _.forEach(commit.references, function (/*reference*/) {
-        // post to github using reference.issue
-      });
-
-      cb();
-    }))
-
-    //.on('end', function() {
-    //  callback();
-    //})
   ;
 }
