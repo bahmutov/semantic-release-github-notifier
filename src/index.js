@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var bluebird = require('bluebird');
 var url = require('url');
 var GitHubApi = require('github');
 var through = require('through2');
@@ -30,10 +31,11 @@ function githubNotifier(pluginConfig, config, callback) {
     return callback(null);
   }
 
+  var createComment = bluebird.promisify(github.issues.createComment);
   var parsedGithubUrl = parseGithubUrl(config.pkg.repository.url);
   commitParser(config.commits)
     .pipe(through.obj(function (commit, enc, cb) {
-      _.forEach(commit.references, function (reference) {
+      var commentPromises = _.map(commit.references, function (reference) {
         var msg = {
           user: parsedGithubUrl[0],
           repo: parsedGithubUrl[1],
@@ -41,10 +43,16 @@ function githubNotifier(pluginConfig, config, callback) {
           message: 'Version ' + config.pkg.version + ' has been published.',
         };
 
-        github.issues.createComment(msg);
+        return createComment(msg);
       });
 
-      cb(null, commit);
+      bluebird.all(commentPromises)
+        .then(function () {
+          cb(null, commit);
+        })
+        .catch(function (err) {
+          cb(err);
+        });
     }));
 
   return callback(true);
