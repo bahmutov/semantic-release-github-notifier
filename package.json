@@ -40,6 +40,7 @@
   "version": "1.0.0",
   "dependencies": {
     "@bahmutov/parse-github-repo-url": "^0.1.0",
+    "bluebird": "^3.2.2",
     "conventional-commits-parser": "^0.1.2",
     "github": "^0.2.4",
     "lodash": "^4.0.1",
