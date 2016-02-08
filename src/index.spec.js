@@ -1,6 +1,7 @@
 'use strict';
 
 var chai = require('chai');
+var nock = require('nock');
 var proxyquire = require('proxyquire');
 var sinon = require('sinon');
 var sinonChai = require('sinon-chai');
@@ -12,12 +13,17 @@ function githubMock() {
 }
 
 githubMock.prototype.authenticate = sinon.spy();
+githubMock.prototype.issues = {
+  createComment: sinon.spy(),
+};
 
 describe('semantic-release-github-notifier', function () {
   var options;
   var plugin;
 
   before(function () {
+    nock.disableNetConnect();
+
     plugin = proxyquire('./index', { github: githubMock });
   });
 
@@ -62,7 +68,19 @@ describe('semantic-release-github-notifier', function () {
     it('calls callback with true', function () {
       var callback = sinon.spy();
       options.debug = undefined;
-      plugin({}, { options: options }, callback);
+      plugin({}, {
+        commits: [
+          {
+            message: 'feat(something): Added new feature.\nFixes #1.',
+          },
+        ],
+        options: options,
+        pkg: {
+          repository: {
+            url: 'https://github.com/hbetts/semantic-release-github-notifier.git',
+          },
+        },
+      }, callback);
 
       expect(callback).to.have.been.calledOnce
         .and.to.have.been.calledWithExactly(true);

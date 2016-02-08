@@ -1,7 +1,11 @@
 'use strict';
 
+var _ = require('lodash');
 var url = require('url');
 var GitHubApi = require('github');
+var through = require('through2');
+var parseGithubUrl = require('@bahmutov/parse-github-repo-url');
+var commitParser = require('./commit-parser');
 
 module.exports = githubNotifier;
 
@@ -25,6 +29,23 @@ function githubNotifier(pluginConfig, config, callback) {
   if (config.options.debug) {
     return callback(null);
   }
+
+  var parsedGithubUrl = parseGithubUrl(config.pkg.repository.url);
+  commitParser(config.commits)
+    .pipe(through.obj(function (commit, enc, cb) {
+      _.forEach(commit.references, function (reference) {
+        var msg = {
+          user: parsedGithubUrl[0],
+          repo: parsedGithubUrl[1],
+          number: reference.issue,
+          message: 'Version ' + config.pkg.version + ' has been published.',
+        };
+
+        github.issues.createComment(msg);
+      });
+
+      cb(null, commit);
+    }));
 
   return callback(true);
 }
