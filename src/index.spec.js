@@ -14,7 +14,7 @@ function githubMock() {
 
 githubMock.prototype.authenticate = sinon.spy();
 githubMock.prototype.issues = {
-  createComment: sinon.spy(),
+  createComment: sinon.stub(),
 };
 
 describe('semantic-release-github-notifier', function () {
@@ -35,6 +35,7 @@ describe('semantic-release-github-notifier', function () {
     };
 
     githubMock.prototype.authenticate.reset();
+    githubMock.prototype.issues.createComment.reset();
   });
 
   describe('debug mode', function () {
@@ -65,8 +66,8 @@ describe('semantic-release-github-notifier', function () {
 
   describe('normal mode', function () {
 
-    it('calls callback with true', function () {
-      var callback = sinon.spy();
+    it('calls callback with true', function (done) {
+      githubMock.prototype.issues.createComment.onFirstCall().callsArgWith(1, null, null);
       options.debug = undefined;
       plugin({}, {
         commits: [
@@ -80,10 +81,13 @@ describe('semantic-release-github-notifier', function () {
             url: 'https://github.com/hbetts/semantic-release-github-notifier.git',
           },
         },
-      }, callback);
+      }, pluginCallback);
 
-      expect(callback).to.have.been.calledOnce
-        .and.to.have.been.calledWithExactly(true);
+      function pluginCallback() {
+        expect(githubMock.prototype.issues.createComment).to.have.been.calledOnce;
+
+        done();
+      }
     });
   });
 });

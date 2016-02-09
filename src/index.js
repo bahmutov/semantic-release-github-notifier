@@ -53,7 +53,8 @@ function githubNotifier(pluginConfig, config, callback) {
         .catch(function (err) {
           cb(err);
         });
-    }));
-
-  return callback(true);
+    }))
+    .on('finish', function () {
+      callback(true);
+    });
 }
