@@ -54,6 +54,9 @@ function githubNotifier(pluginConfig, config, callback) {
           cb(err);
         });
     }))
+    .on('error', function () {
+      callback(false);
+    })
     .on('finish', function () {
       callback(true);
     });

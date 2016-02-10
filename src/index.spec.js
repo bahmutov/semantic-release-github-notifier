@@ -42,6 +42,7 @@ describe('semantic-release-github-notifier', function () {
 
     it('parses GitHub URL', function () {
       var callback = sinon.spy();
+
       plugin({}, { options: options }, callback);
 
       expect(githubMock.prototype.authenticate).to.have.been.calledOnce
@@ -54,6 +55,7 @@ describe('semantic-release-github-notifier', function () {
     it('falls back on default GitHub URL', function () {
       var callback = sinon.spy();
       options.githubUrl = undefined;
+
       plugin({}, { options: options }, callback);
 
       expect(githubMock.prototype.authenticate).to.have.been.calledOnce
@@ -67,8 +69,9 @@ describe('semantic-release-github-notifier', function () {
   describe('normal mode', function () {
 
     it('calls callback with true', function (done) {
-      githubMock.prototype.issues.createComment.onFirstCall().callsArgWith(1, null, null);
+      githubMock.prototype.issues.createComment.onFirstCall().callsArgWith(1, null, {});
       options.debug = undefined;
+
       plugin({}, {
         commits: [
           {
@@ -80,11 +83,20 @@ describe('semantic-release-github-notifier', function () {
           repository: {
             url: 'https://github.com/hbetts/semantic-release-github-notifier.git',
           },
+          version: '1.0.0',
         },
       }, pluginCallback);
 
-      function pluginCallback() {
-        expect(githubMock.prototype.issues.createComment).to.have.been.calledOnce;
+      function pluginCallback(result) {
+        expect(result).to.equal(true);
+
+        expect(githubMock.prototype.issues.createComment).to.have.been.calledOnce
+          .and.to.have.been.calledWith({
+            user: 'hbetts',
+            repo: 'semantic-release-github-notifier',
+            number: '1',
+            message: 'Version 1.0.0 has been published.',
+          });
 
         done();
       }
