@@ -68,10 +68,7 @@ describe('semantic-release-github-notifier', function () {
 
   describe('normal mode', function () {
 
-    it('calls callback with true', function (done) {
-      githubMock.prototype.issues.createComment.onFirstCall().callsArgWith(1, null, {});
-      options.debug = undefined;
-
+    function pluginWrapper(callback) {
       plugin({}, {
         commits: [
           {
@@ -85,11 +82,19 @@ describe('semantic-release-github-notifier', function () {
           },
           version: '1.0.0',
         },
-      }, pluginCallback);
+      }, callback);
+    }
+
+    beforeEach(function () {
+      options.debug = undefined;
+    });
+
+    it('calls callback with true on successful GitHub comment', function (done) {
+      githubMock.prototype.issues.createComment.onFirstCall().callsArgWith(1, null, {});
+
+      pluginWrapper(pluginCallback);
 
       function pluginCallback(result) {
-        expect(result).to.equal(true);
-
         expect(githubMock.prototype.issues.createComment).to.have.been.calledOnce
           .and.to.have.been.calledWith({
             user: 'hbetts',
@@ -97,6 +102,20 @@ describe('semantic-release-github-notifier', function () {
             number: '1',
             message: 'Version 1.0.0 has been published.',
           });
+        expect(result).to.equal(true);
+
+        done();
+      }
+    });
+
+    it('calls callback with false on failed GitHub comment', function (done) {
+      githubMock.prototype.issues.createComment.onFirstCall().callsArgWith(1, new Error('Failed'), {});
+
+      pluginWrapper(pluginCallback);
+
+      function pluginCallback(result) {
+        expect(githubMock.prototype.issues.createComment).to.have.been.calledOnce;
+        expect(result).to.equal(false);
 
         done();
       }
