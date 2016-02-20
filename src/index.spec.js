@@ -109,7 +109,8 @@ describe('semantic-release-github-notifier', function () {
     });
 
     it('calls callback with false on failed GitHub comment', function (done) {
-      githubMock.prototype.issues.createComment.onFirstCall().callsArgWith(1, new Error('Failed'), {});
+      githubMock.prototype.issues.createComment
+        .onFirstCall().callsArgWith(1, new Error('Failed'), {});
 
       pluginWrapper(pluginCallback);
 
