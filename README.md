@@ -1,5 +1,7 @@
 # semantic-release-github-notifier
 
+[![Join the chat at https://gitter.im/hbetts/semantic-release-github-notifier](https://badges.gitter.im/hbetts/semantic-release-github-notifier.svg)](https://gitter.im/hbetts/semantic-release-github-notifier?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/hbetts/semantic-release-github-notifier.svg?branch=master)](https://travis-ci.org/hbetts/semantic-release-github-notifier)
 [![codecov.io](https://codecov.io/github/hbetts/semantic-release-github-notifier/coverage.svg?branch=master)](https://codecov.io/github/hbetts/semantic-release-github-notifier?branch=master)
 [![Dependency Status](https://david-dm.org/hbetts/semantic-release-github-notifier.svg)](https://david-dm.org/hbetts/semantic-release-github-notifier)
