@@ -7,6 +7,7 @@ var GitHubApi = require('github');
 var through = require('through2');
 var parseGithubUrl = require('parse-github-repo-url');
 var commitParser = require('./commit-parser');
+var debug = require('debug')('notifier');
 
 module.exports = githubNotifier;
 
@@ -32,10 +33,16 @@ function githubNotifier(pluginConfig, config, callback) {
   }
 
   var createComment = bluebird.promisify(github.issues.createComment);
+
+  debug('parsing repo url %s', config.pkg.repository.url);
+  debug('for published version %s', config.pkg.version);
+
   var parsedGithubUrl = parseGithubUrl(config.pkg.repository.url);
   commitParser(config.commits)
     .pipe(through.obj(function (commit, enc, cb) {
+      debug('notifying for commit %j', commit);
       var commentPromises = _.map(commit.references, function (reference) {
+        debug('commit involves issue reference %j', reference);
         var msg = {
           user: parsedGithubUrl[0],
           repo: parsedGithubUrl[1],

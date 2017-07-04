@@ -37,6 +37,7 @@
   "dependencies": {
     "bluebird": "^3.2.2",
     "conventional-commits-parser": "^1.0.1",
+    "debug": "^2.6.8",
     "github": "^0.2.4",
     "lodash": "^4.0.1",
     "parse-github-repo-url": "^1.4.0",

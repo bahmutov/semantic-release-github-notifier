@@ -20,7 +20,9 @@ npm install --global semantic-release-github-notifier
 
 ## Usage
 
+## Debug
 
+Run with `DEBUG=notifier ...` environment variable
 
 ## Contributing
 
