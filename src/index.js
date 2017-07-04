@@ -5,7 +5,7 @@ var bluebird = require('bluebird');
 var url = require('url');
 var GitHubApi = require('github');
 var through = require('through2');
-var parseGithubUrl = require('@bahmutov/parse-github-repo-url');
+var parseGithubUrl = require('parse-github-repo-url');
 var commitParser = require('./commit-parser');
 
 module.exports = githubNotifier;
