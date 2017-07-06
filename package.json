@@ -41,13 +41,16 @@
     "bluebird": "^3.2.2",
     "conventional-commits-parser": "^1.0.1",
     "debug": "^2.6.8",
+    "ggit": "^1.16.0",
     "github": "^0.2.4",
     "lodash": "^4.0.1",
     "parse-github-repo-url": "^1.4.0",
+    "simple-commit-message": "^3.0.2",
     "stream-array": "^1.1.1",
     "through2": "^2.0.0"
   },
   "devDependencies": {
+    "@semantic-release/release-notes-generator": "^2.0.0",
     "chai": "^3.4.0",
     "codecov": "^1.0.1",
     "cz-conventional-changelog": "^1.1.4",
