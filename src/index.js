@@ -10,26 +10,16 @@ var commitParser = require('./commit-parser');
 var debug = require('debug')('notifier');
 const ggit = require('ggit')
 const simpleCommitMessage = require('simple-commit-message')
+const newCommits = require('new-public-commits').newPublicCommits
 
 module.exports = githubNotifier;
-
-function getSemanticCommits() {
-  return ggit.commits.afterLastTag()
-    .then(commits => {
-      return commits.map(commit => {
-        commit.semver = simpleCommitMessage.parse(commit.message)
-        return commit
-      })
-      .filter(commit => commit.semver)
-    })
-}
 
 // function githubNotifier(pluginConfig, config, callback) {
 function githubNotifier(pluginConfig, config, callback) {
   debug('plugin config', pluginConfig)
   debug('pkg', config.pkg)
   // return callback()
-  getSemanticCommits()
+  newCommits()
     .then(function (commits) {
       debug('have %d semantic commits', commits.length)
       if (!commits.length) {
