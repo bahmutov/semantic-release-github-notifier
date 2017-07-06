@@ -33,6 +33,9 @@
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "test": "gulp"
   },
+  "release": {
+    "generateNotes": "."
+  },
   "version": "1.0.0",
   "dependencies": {
     "bluebird": "^3.2.2",
