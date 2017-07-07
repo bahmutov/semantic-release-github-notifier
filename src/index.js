@@ -10,77 +10,152 @@ var commitParser = require('./commit-parser');
 var debug = require('debug')('notifier');
 const ggit = require('ggit')
 const simpleCommitMessage = require('simple-commit-message')
-const newCommits = require('new-public-commits').newPublicCommits
+const newPublicCommits = require('new-public-commits').newPublicCommits
+const commitCloses = require('commit-closes')
+const {uniq, partial} = require('ramda')
 
 module.exports = githubNotifier;
 
-// function githubNotifier(pluginConfig, config, callback) {
+function commitToIsses(commit) {
+  return commitCloses(commit.message, commit.body)
+}
+
+function hasIssues(issues) {
+  return issues.length > 0
+}
+
+function issuesToCommits(commits) {
+  debug('have %d semantic commits', commits.length)
+  if (!commits.length) {
+    return []
+  }
+
+  const closedIssues = commits.map(commitToIsses)
+    .filter(hasIssues)
+  debug('semantic commits close the following issues')
+  debug(closedIssues)
+  const uniqueIssues = uniq(closedIssues)
+  debug('unique closed issues', uniqueIssues)
+  return uniqueIssues
+}
+
+// :: -> [issue numbers]
+function getClosedIssues () {
+  return newPublicCommits()
+    .then(issuesToCommits)
+}
+
+function getGitHub(githubUrl, token) {
+  if (!token) {
+    throw new Error('Missing gh token')
+  }
+  var githubConfig = githubUrl ? url.parse(githubUrl) : {};
+
+  var github = new GitHubApi({
+    version: '3.0.0',
+    port: githubConfig.port,
+    protocol: (githubConfig.protocol || '').split(':')[0] || null,
+    host: githubConfig.hostname,
+  });
+
+  github.authenticate({
+    type: 'oauth',
+    token: token,
+  });
+
+  var createComment = bluebird.promisify(github.issues.createComment);
+  return createComment
+}
+
+function commentOnIssues(repoUrl, createComment, message, issues) {
+  if (!issues) {
+    return Promise.resolve()
+  }
+  if (!issues.lenth) {
+    return Promise.resolve()
+  }
+
+  const parsed = parseGithubUrl(repoUrl)
+  const user = parsed[0]
+  const repo = parsed[1]
+  return Promise.resolve()
+}
+
 function githubNotifier(pluginConfig, config, callback) {
-  debug('plugin config', pluginConfig)
-  debug('pkg', config.pkg)
-  // return callback()
-  newCommits()
-    .then(function (commits) {
-      debug('have %d semantic commits', commits.length)
-      if (!commits.length) {
-        return callback()
-      }
+  // debug('plugin config', pluginConfig)
+  // debug('pkg', config.pkg)
 
-        var parsedGithubUrl = parseGithubUrl(config.pkg.repository.url);
-        commitParser(commits)
-          .pipe(through.obj(function (commit, enc, cb) {
-            debug('notifying for commit %j', commit);
-            var commentPromises = _.map(commit.references, function (reference) {
-              debug('commit involves issue reference %j', reference);
-              var msg = {
-                user: parsedGithubUrl[0],
-                repo: parsedGithubUrl[1],
-                number: reference.issue,
-                message: 'Version ' + config.pkg.version + ' has been published.',
-              };
+  const repoUrl = config.pkg.repository.url
+  const createComment = getGitHub(repoUrl, process.env.GH_TOKEN)
+  const message = `Version ${config.pkg.version} has been published.`
 
-              // return createComment(msg);
-              return bluebird.resolve()
-            });
+  const onSuccess = () => {
+    debug('✅  all done, with message: %s', message)
+    callback()
+  }
 
-            bluebird.all(commentPromises)
-              .then(function () {
-                debug('all done')
-                cb(null, commit);
-              })
-              .catch(function (err) {
-                cb(err);
-              });
-          }))
-          .on('error', function () {
-            callback(false);
-          })
-          .on('finish', function () {
-            callback(true);
-          });
-    })
+  const onFailure = (err) => {
+    console.error('🔥  failed with error')
+    console.error(err)
+    callback(err)
+  }
 
-  // var githubConfig = config.options.githubUrl ? url.parse(config.options.githubUrl) : {};
+  getClosedIssues()
+    .then(partial(commentOnIssues, [repoUrl, createComment, message]))
+    .then(onSuccess, onFailure)
 
-  // var github = new GitHubApi({
-  //   version: '3.0.0',
-  //   port: githubConfig.port,
-  //   protocol: (githubConfig.protocol || '').split(':')[0] || null,
-  //   host: githubConfig.hostname,
-  // });
+  // newCommits()
+  //   .then(function (commits) {
+  //     debug('have %d semantic commits', commits.length)
+  //     if (!commits.length) {
+  //       console.log('no commits')
+  //       return callback()
+  //     }
 
-  // github.authenticate({
-  //   type: 'oauth',
-  //   token: config.options.githubToken,
-  // });
+  //     const closedIssues = commits.map(commitToIsses)
+  //       .filter(hasIssues)
+  //     console.log('semantic commits close the following issues')
+  //     console.log(closedIssues)
+  //     const uniqueIssues = uniq(closedIssues)
+  //     console.log('unique closed issues', uniqueIssues)
+  //     if (!uniqueIssues.length) {
+  //       return callback()
+  //     }
 
-  // // Placed at the end so that all GitHub code has had a chance to be invoked, including sanity
-  // // checking for required input, like a GitHub token.
-  // if (config.options.debug) {
-  //   return callback(null);
-  // }
+  //     // should it be pkg or repo url?
+  //       var parsedGithubUrl = parseGithubUrl(config.pkg.repository.url);
+  //       commitParser(commits)
+  //         .pipe(through.obj(function (commit, enc, cb) {
+  //           debug('notifying for commit %j', commit);
+  //           var commentPromises = _.map(commit.references, function (reference) {
+  //             debug('commit involves issue reference %j', reference);
+  //             var msg = {
+  //               user: parsedGithubUrl[0],
+  //               repo: parsedGithubUrl[1],
+  //               number: reference.issue,
+  //               message: 'Version ' + config.pkg.version + ' has been published.',
+  //             };
 
-  // var createComment = bluebird.promisify(github.issues.createComment);
+  //             // return createComment(msg);
+  //             return bluebird.resolve()
+  //           });
+
+  //           bluebird.all(commentPromises)
+  //             .then(function () {
+  //               debug('all done')
+  //               cb(null, commit);
+  //             })
+  //             .catch(function (err) {
+  //               cb(err);
+  //             });
+  //         }))
+  //         .on('error', function () {
+  //           callback(false);
+  //         })
+  //         .on('finish', function () {
+  //           callback(true);
+  //         });
+  //   }).catch(console.error)
 
   debug('parsing repo url %s', config.pkg.repository.url);
   debug('for published version %s', config.pkg.version);
